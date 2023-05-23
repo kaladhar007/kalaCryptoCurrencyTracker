@@ -1,0 +1,14 @@
+.CryptocurrencyItem {
+  display: flex;
+  justify-content: space-around;
+}
+.imageAndNameContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.imgItem {
+  height: 20px;
+  width: 20px;
+  margin-right: 10px;
+}
