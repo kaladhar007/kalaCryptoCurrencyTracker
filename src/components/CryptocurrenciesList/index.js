@@ -2,58 +2,62 @@ import {Component} from 'react'
 import Loader from 'react-loader-spinner'
 import 'react-loader-spinner/dist/loader/css/react-spinner-loader.css'
 import './index.css'
+
 import CryptocurrencyItem from '../CryptocurrencyItem'
 
+const appLogoUrl =
+  'https://assets.ccbp.in/frontend/react-js/cryptocurrency-bg.png'
+
 class CryptocurrenciesList extends Component {
-  state = {currencyDataList: [], isLoading: true}
+  state = {currencyList: [], isLoading: true}
 
   componentDidMount() {
-    this.getAllCurrencyData()
+    this.getCurrenyDetails()
   }
 
-  getAllCurrencyData = async () => {
+  getCurrenyDetails = async () => {
     const response = await fetch(
       'https://apis.ccbp.in/crypto-currency-converter',
     )
-    const data = await response.json()
-    const formattedData = data.map(each => ({
-      currencyName: each.currency_name,
-      usdValue: each.usd_value,
-      euroValue: each.euro_value,
-      id: each.id,
-      currencyLogo: each.currency_logo,
+    const currencyDetails = await response.json()
+    const convertedDetails = currencyDetails.map(eachItem => ({
+      currencyName: eachItem.currency_name,
+      usdValue: eachItem.usd_value,
+      euroValue: eachItem.euro_value,
+      id: eachItem.id,
+      currencyLogo: eachItem.currency_logo,
     }))
-
-    console.log(formattedData)
-    this.setState({currencyDataList: formattedData, isLoading: false})
+    console.log(convertedDetails)
+    this.setState({currencyList: convertedDetails, isLoading: false})
   }
 
   render() {
-    const {currencyDataList, isLoading} = this.state
+    const {currencyList, isLoading} = this.state
     return (
-      <div className="currenciesList">
-        <h1 className="main_heading">CryptocurrencyTracker</h1>
-        <img
-          src="https://assets.ccbp.in/frontend/react-js/cryptocurrency-bg.png"
-          alt="cryptocurrency"
-          className="main_img"
-        />
-        <div className="headingParas">
-          <p>CoinType</p>
-          <p>USD</p>
-          <p>EURO</p>
-        </div>
-        <ul>
-          {isLoading ? (
-            <h2 className="rings" data-testid="loader">
-              <Loader type="Rings" color="#ffffff" height={80} width={80} />
-            </h2>
-          ) : (
-            currencyDataList.map(each => (
-              <CryptocurrencyItem obj={each} key={each.id} />
-            ))
-          )}
-        </ul>
+      <div className="currencyItem_container">
+        {isLoading ? (
+          <div data-testid="loader" className="loader">
+            <Loader type="Rings" color="#ffffff" height={80} width={80} />
+          </div>
+        ) : (
+          <div className="CryptocurrenciesList">
+            <h1 className="heading">Cryptocurrency Tracker</h1>
+            <img src={appLogoUrl} alt="cryptocurrency" className="app_logo" />
+            <ul className="ul_container">
+              <div className="table_heading_container">
+                <p className="coinType">Coin Type</p>
+                <p className="usd">USD</p>
+                <p className="euro">EURO</p>
+              </div>
+              {currencyList.map(eachObject => (
+                <CryptocurrencyItem
+                  currencyDetails={eachObject}
+                  key={eachObject.id}
+                />
+              ))}
+            </ul>
+          </div>
+        )}
       </div>
     )
   }
